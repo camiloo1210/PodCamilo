@@ -14,12 +14,13 @@ if (-not $existing) {
     k3d cluster create --config "$root/deploy/k3d-config.yaml"
 }
 
-kubectl --context "k3d-$cluster" apply -f "$root/deploy/web.yaml"
-kubectl --context "k3d-$cluster" -n $namespace rollout status deployment/$cluster-web --timeout=120s
-kubectl --context "k3d-$cluster" -n $namespace get deployment,pods,service
+kubectl --context "k3d-$cluster" -n $namespace delete deployment/podcamilo-web service/podcamilo-web --ignore-not-found
+kubectl --context "k3d-$cluster" apply -f "$root/deploy/redis.yaml"
+kubectl --context "k3d-$cluster" -n $namespace rollout status deployment/redis-cache --timeout=120s
+kubectl --context "k3d-$cluster" -n $namespace get deployment,replicaset,pods,service
 
 if ($OpenSite) {
-    kubectl --context "k3d-$cluster" -n $namespace port-forward service/$cluster-web 18081:80
+    kubectl --context "k3d-$cluster" -n $namespace port-forward service/redis-cache 16379:6379
 } else {
-    Write-Host 'Ready. Run ./scripts/start.ps1 -OpenSite to open http://localhost:18081.'
+    Write-Host 'Ready. Run ./scripts/start.ps1 -OpenSite to expose Redis at localhost:16379.'
 }

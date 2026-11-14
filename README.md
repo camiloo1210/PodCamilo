@@ -1,17 +1,18 @@
 # Pod Camilo
 
-Laboratorio local e independiente de Kubernetes: un clúster **k3d/K3s** y un pod web básico.
+Laboratorio local e independiente de Kubernetes: un clúster **k3d/K3s** que despliega Redis.
 
 ## Qué se crea
 
 ```text
 k3d podcamilo
 └── namespace podcamilo
-    ├── Deployment podcamilo-web (1 pod Nginx)
-    └── Service podcamilo-web
+    ├── Deployment redis-cache (2 pods Redis)
+    ├── ReplicaSet redis-cache-…
+    └── Service redis-cache
 ```
 
-No usa Kivi ni Argo CD. El contenido de la página está en `deploy/web.yaml` para que sea fácil ver la relación entre manifiesto y pod.
+No usa Kivi ni Argo CD. La configuración está en `deploy/redis.yaml` y el informe de entrega en `INFORME.md`.
 
 ## Requisitos
 
@@ -26,12 +27,12 @@ No usa Kivi ni Argo CD. El contenido de la página está en `deploy/web.yaml` pa
 ./scripts/start.ps1 -OpenSite
 ```
 
-El segundo comando muestra la página en `http://localhost:18081` mientras la terminal permanezca abierta.
+El segundo comando expone Redis en `localhost:16379` mientras la terminal permanezca abierta.
 
 ## Verificar y detener
 
 ```powershell
-kubectl --context k3d-podcamilo -n podcamilo get all
+kubectl --context k3d-podcamilo -n podcamilo get deployment,replicaset,pods,service
 k3d cluster stop podcamilo
 ```
 
