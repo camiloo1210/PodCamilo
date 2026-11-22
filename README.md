@@ -13,4 +13,3 @@ Los dos pods ejecutan instancias independientes con datos temporales. El Replica
 ## Qué contiene el repositorio
 
 - **deploy/** contiene `k3d-config.yaml`, que define el clúster local, y `redis.yaml`, que define el namespace, el Deployment y el Service.
-- **scripts/** contiene `start.ps1`, que inicia el clúster, aplica la configuración y espera que Redis esté listo. También permite habilitar el acceso local durante la demostración.
