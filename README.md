@@ -3,7 +3,6 @@
 Práctica de Deployment y ReplicaSet con Redis 7.4 en k3d. El Deployment `redis-cache` declara dos pods y Kubernetes crea el ReplicaSet que los mantiene. El Service ClusterIP ofrece `redis-cache:6379` dentro del clúster.
 
 - [Repositorio público en GitHub](https://github.com/camiloo1210/PodCamilo)
-- [Informe editable con configuración y evidencias](entregables/Informe%20editable%20-%20Camilo%20Brazales%20-%20Redis.docx)
 - [Manifiesto de Kubernetes](deploy/redis.yaml)
 
 ## Ejecutar la práctica
@@ -22,6 +21,18 @@ redis-cli -h 127.0.0.1 -p 16379 PING
 ```
 
 La respuesta esperada es `PONG`. Redis usa TCP. La exposición local termina al cerrar el port-forward. Detén el laboratorio con `k3d cluster stop podcamilo`.
+
+## Consultar Redis
+
+Puedes abrir la consola incluida en el contenedor, incluso si Windows no tiene `redis-cli`:
+
+```powershell
+kubectl --context k3d-podcamilo -n podcamilo exec -it deployment/redis-cache -- redis-cli
+```
+
+Dentro de Redis ejecuta `PING` para comprobar la respuesta y `SCAN 0` para explorar las claves. El puerto `16379` habla Redis por TCP.
+
+Para una vista gráfica, usa [Redis Insight de escritorio](https://redis.io/docs/latest/operate/redisinsight/install/install-on-desktop/). Con el port-forward activo, agrega la conexión `127.0.0.1:16379`, con usuario y contraseña vacíos y TLS desactivado. La sesión de port-forward se conecta a uno de los pods del Service.
 
 ## Usos de Redis
 
